@@ -300,7 +300,7 @@ main { flex: 1; min-height: 0; position: relative; }
 <header class="app">
   <h1>Fintech News <span class="count" id="count"></span></h1>
   <div class="search-row">
-    <input id="search" type="search" placeholder="Search stories, themes, sources…" enterkeyhint="search" autocomplete="off">
+    <input id="search" type="search" placeholder="Search stories, entities, themes…" enterkeyhint="search" autocomplete="off">
   </div>
   <div class="tabs">
     <button type="button" class="active" id="tab-timeline">Timeline</button>
@@ -377,7 +377,9 @@ window.DEFAULT_LANES = ["themes/sme-ai", "themes/payments", "themes/regulation",
     }
     if (!query) return true;
     const q = query.toLowerCase();
-    const blob = [n.label, n.description, n.id, ...(n.tags || [])].join(' ').toLowerCase();
+    const ents = nodeEntities(n);
+    const entityBits = ents.flatMap(eid => [eid, entityLabelById[eid] || '']);
+    const blob = [n.label, n.description, n.id, ...(n.tags || []), ...entityBits].join(' ').toLowerCase();
     return blob.includes(q);
   }
 
